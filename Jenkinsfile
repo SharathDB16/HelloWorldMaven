@@ -1,45 +1,34 @@
-pipeline { 
-    agent any 
-    stages {
-        stage('Build') { 
-            steps {
-                withMaven(maven : 'apache-maven-3.8.4'){
-                        sh "mvn clean compile"
-                }
-            }
-        }
-        stage('Test'){
-            steps {
-                withMaven(maven : 'apache-maven-3.8.4'){
-                        sh "mvn test"
-                }
+// Declarative Pipeline //
+pipeline {
+    agent any
 
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building a Dummy project ..'
             }
         }
-        stage('build && SonarQube analysis') {
+        stage('Test') {
             steps {
-                withSonarQubeEnv('sonar.tools.devops.****') {
-                    sh 'sonar-scanner -Dsonar.projectKey=myProject -Dsonar.sources=./src'
-                }
+                echo 'Testing..'
             }
         }
-        stage("Quality Gate") {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-                    // true = set pipeline to UNSTABLE, false = don't
-                    // Requires SonarScanner for Jenkins 2.7+
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-			}
         stage('Deploy') {
             steps {
-               withMaven(maven : 'apache-maven-3.8.4'){
-                        sh "mvn deploy"
-                }
-
+                echo 'Deploying....'
             }
         }
+    }
+}
+// Script //
+node {
+    stage('Build') {
+        echo 'Building....'
+    }
+    stage('Test') {
+        echo 'Building....'
+    }
+    stage('Deploy') {
+        echo 'Deploying....'
     }
 }
